@@ -1,16 +1,27 @@
 import { useRef, useEffect } from "react";
 import p5 from "p5";
 
-const Sketch = ({ noise = 0.1 }) => {
+const Sketch = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const sketch = (p) => {
+      const noise = 0.1;
+      const minRadius = 5;
+      const maxRadius = 20;
+      const color = 240;
+      const velocityLimit = 5;
+      const killSpeed = 0.15;
+
       const particleArray = [];
 
       p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.colorMode(p.HSB);
+        p.frameRate(60);
+        p.describe(
+          "Blue circles appear on a white background and move from the center to the edge when the mouse is pressed."
+        );
       };
 
       p.windowResized = () => {
@@ -60,8 +71,8 @@ const Sketch = ({ noise = 0.1 }) => {
         this.x = x;
         this.y = y;
         this.r = 1;
-        this.maxR = p.random(5, 20);
-        this.color = 240;
+        this.maxR = p.random(minRadius, maxRadius);
+        this.color = color;
         this.alpha = 1;
         this.switch = false;
         this.pos = p.createVector(this.x, this.y);
@@ -81,7 +92,7 @@ const Sketch = ({ noise = 0.1 }) => {
 
         this.update = function () {
           this.vel.add(this.acc);
-          this.vel.limit(7);
+          this.vel.limit(velocityLimit);
           this.pos.add(this.vel);
           this.acc.mult(0);
           if (this.switch == false) {
@@ -92,7 +103,7 @@ const Sketch = ({ noise = 0.1 }) => {
             }
           } else {
             if (this.r > 0) {
-              this.r -= 0.2;
+              this.r -= killSpeed;
             } else {
               this.r = 0;
             }
@@ -105,7 +116,6 @@ const Sketch = ({ noise = 0.1 }) => {
       }
     };
 
-    // Create the p5 instance
     const p5Instance = new p5(sketch, canvasRef.current);
 
     return () => {
