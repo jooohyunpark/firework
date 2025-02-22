@@ -8,10 +8,9 @@ function App() {
     const sketch = (p) => {
       const noise = 0.1;
       const minRadius = 5;
-      const maxRadius = 20;
-      const color = 240;
+      const maxRadius = 15;
+      const color = 60;
       const velocityLimit = 5;
-      const killSpeed = 0.15;
 
       const particleArray = [];
 
@@ -30,7 +29,7 @@ function App() {
       };
 
       p.draw = () => {
-        p.background(0, 0, 100);
+        p.background(0, 0, 0);
 
         recordParticles();
         drawParticles();
@@ -76,6 +75,7 @@ function App() {
         this.color = color;
         this.alpha = 1;
         this.switch = false;
+        this.killSpeed = p.random(0.1, 0.2);
         this.pos = p.createVector(this.x, this.y);
         this.vel = p
           .createVector(
@@ -87,7 +87,7 @@ function App() {
 
         this.show = function () {
           p.noStroke();
-          p.fill(this.color, 100, 100, this.alpha);
+          p.fill(this.color, 0, 100, this.alpha);
           p.ellipse(this.pos.x, this.pos.y, this.r * 2, this.r * 2);
         };
 
@@ -104,7 +104,7 @@ function App() {
             }
           } else {
             if (this.r > 0) {
-              this.r -= killSpeed;
+              this.r -= this.killSpeed;
             } else {
               this.r = 0;
             }
